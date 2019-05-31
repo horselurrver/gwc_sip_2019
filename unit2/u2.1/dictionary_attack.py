@@ -31,7 +31,7 @@ if test_password in dictionary:
 for word in dictionary:
     index = 0
     #Check for similarities between two words
-    if num_diff(test_password, word) < 2 and num_diff(test_password, word) > 0:
+    if num_diff(test_password, word) < 3 and num_diff(test_password, word) > 0:
         print("Hmm... your password looks very similar to the word " + word)
     try:
         index = test_password.index(word)
