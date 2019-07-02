@@ -12,6 +12,8 @@ savename = 'chikorita2.png'
 
 if __name__ == "__main__":
     im = load_img(filename2)
-    obamacon(im)
+    # obamacon(im)
+    adjustBrightness(im, True)
+    # darker(im)
     # show_img(im)
     # save_img(im, savename)

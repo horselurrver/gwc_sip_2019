@@ -7,6 +7,8 @@ To use: from filters import *
 """
 from PIL import Image
 
+darkConstant = 2
+brightConstant = 2
 # Returns an Image object given either an absolute path or filename in the same folder
 def load_img(filename):
     im = Image.open(filename)
@@ -25,9 +27,9 @@ def save_img(imageObject, filename):
     else:
         print("'{}' was successfully saved!".format(filename))
 # Applies obama's filter to image
-# Returns new Image object with the filter applied
+# Returns new image with the filter applied
 def obamacon(imageObject):
-    outputName = 'output.png'
+    outputName = 'obamacon.png'
     out = Image.new('I', imageObject.size)
     # Get height and width of image
     width, height = imageObject.size
@@ -45,5 +47,28 @@ def obamacon(imageObject):
                 imageObject.putpixel((x, y), (112, 150, 158))
             else: # High
                 imageObject.putpixel((x, y), (252, 227, 166))
+    imageObject.save(outputName)
+    show_img(load_img(outputName))
+
+# Map function for making image darker
+def darkerMult(n):
+    return n // darkConstant
+
+# Map function for making image brighter
+def brighterMult(n):
+    return n * brightConstant
+
+def adjustBrightness(imageObject, brighter):
+    outputName = 'brighter.png' if brighter else 'darker.png'
+    out = Image.new('I', imageObject.size)
+    # Get height and width of image
+    width, height = imageObject.size
+    print('Brighter!') if brighter else print('Darker!')
+    for x in range(width):
+        for y in range(height):
+            if brighter:
+                imageObject.putpixel((x, y), tuple(map(brighterMult, imageObject.getpixel((x, y)))))
+            else:
+                imageObject.putpixel((x, y), tuple(map(darkerMult, imageObject.getpixel((x, y)))))
     imageObject.save(outputName)
     show_img(load_img(outputName))
