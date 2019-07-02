@@ -6,10 +6,12 @@ Part 1:
 - Save image to new file on computer under different filename
 """
 
-filename = 'chikorita.png'
+filename1 = 'chikorita.png'
+filename2 = 'trump.jpg'
 savename = 'chikorita2.png'
 
 if __name__ == "__main__":
-    im = load_img(filename)
-    show_img(im)
-    save_img(im, savename)
+    im = load_img(filename2)
+    obamacon(im)
+    # show_img(im)
+    # save_img(im, savename)
