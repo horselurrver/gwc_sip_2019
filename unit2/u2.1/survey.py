@@ -1,5 +1,5 @@
 import datetime
-from dateutil.relativedelta import relativedelta
+import json
 # list of dictionaries
 responses = []
 def askName():
@@ -52,10 +52,16 @@ def conductSurvey():
         'hours': hours
     })
 
+def saveToJSON(filename):
+    with open(filename, 'w') as outfile:
+        json.dump(responses, outfile)
+
 if __name__ == '__main__':
+    filename = 'survey.json'
     while True:
         conductSurvey()
         cont = input('Continue collecting responses? (y/n) ')
         if cont == 'n':
-            print(str(responses))
+            print('Saving to ' + filename + ': ' + str(responses))
             break
+    saveToJSON(filename)
