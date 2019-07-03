@@ -1,1 +1,1 @@
-[{"name": "amy", "dob": "11/11/1999", "hours": 4}, {"name": "bob", "dob": "12/12/2000", "hours": 2}]
+[{"name": "Amy", "dob": "11/11/1999", "age": 20, "hours": 3}, {"name": "Bobb", "dob": "11/12/2000", "age": 19, "hours": 3}, {"name": "John", "dob": "9/9/1995", "age": 24, "hours": 1}]
