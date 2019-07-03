@@ -1,7 +1,7 @@
 import datetime
-
-
-responses = {}
+from dateutil.relativedelta import relativedelta
+# list of dictionaries
+responses = []
 def askName():
     name = ''
     while True:
@@ -22,20 +22,40 @@ def askDOB():
         except ValueError:
             print('Invalid date')
 
-def askAge():
-    age = 0
+def calcAge(dob):
+    bday = datetime.datetime.strptime(dob, '%m/%d/%Y')
+    diff = datetime.datetime.now().year - bday.year
+    return diff
+
+def askHours():
+    hours = 0
     while True:
-        age = input('What is your age? ')
+        hours = input('How many hours do you spend on your phone daily? ')
         try:
-            age = int(age)
-            if age < 0 or age > 130:
+            hours = int(hours)
+            if hours < 0 or hours > 130:
                 raise ValueError
         except ValueError:
             print('Invalid age')
         else:
-            return int(age)
+            return int(hours)
 
-print('Hello! I have some survey questions for you')
-askName()
-askDOB()
-askAge()
+def conductSurvey():
+    print('Hello! I have some survey questions for you')
+    name = askName()
+    dob = askDOB()
+    calcAge(dob)
+    hours = askHours()
+    responses.append({
+        'name': name,
+        'dob': dob,
+        'hours': hours
+    })
+
+if __name__ == '__main__':
+    while True:
+        conductSurvey()
+        cont = input('Continue collecting responses? (y/n) ')
+        if cont == 'n':
+            print(str(responses))
+            break
