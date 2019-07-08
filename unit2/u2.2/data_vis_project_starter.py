@@ -10,6 +10,33 @@ import matplotlib.pyplot as plt
 import numpy as np
 from wordcloud import WordCloud
 
+# return set of words that have neutral sentiment
+def getNeutralWords(wordSet):
+    neutral = []
+    for word in wordSet:
+        blob = TextBlob(word)
+        if blob.sentiment.polarity == 0:
+            neutral.append(word)
+    return neutral
+
+# return set of words that have positive sentiment
+def getPositveWords(wordSet):
+    positive = []
+    for word in wordSet:
+        blob = TextBlob(word)
+        if blob.sentiment.polarity > 0:
+            positive.append(word)
+    return positive
+
+# return set of words that have positive sentiment
+def getNegativeWords(wordSet):
+    negative = []
+    for word in wordSet:
+        blob = TextBlob(word)
+        if blob.sentiment.polarity < 0:
+            negative.append(word)
+    return negative
+
 def getAveragePolaritySubjectivity(sentiments):
     totalPolarity = 0
     totalSubjectivity = 0
@@ -41,7 +68,7 @@ def graphHistogram(data, minX, maxX, xLabel, yLabel, title, figure_num):
     plt.grid(True)
     plt.show()
 
-def graphScatterplot(sentiments):
+def graphScatterplot(sentiments, figure_num):
     plt.figure(1)
     np.random.seed(19680801)
 
@@ -54,12 +81,13 @@ def graphScatterplot(sentiments):
     plt.scatter(x, y, s=area, c=colors, alpha=0.5)
     plt.show()
 
-def generateWordCloud(text):
+def generateWordCloud(text, title, figure_num):
     # Create and generate a word cloud image:
     # lower max_font_size, change the maximum number of word and lighten the background:
     wordcloud = WordCloud(max_font_size=50, max_words=100, background_color="white").generate(text)
-    plt.figure(4)
+    plt.figure(figure_num)
     plt.imshow(wordcloud, interpolation="bilinear")
+    plt.title(title)
     plt.axis("off")
     plt.show()
 
@@ -84,7 +112,7 @@ tupleObj = loadJSON()
 allSentiments = tupleObj[1]
 allTweetText = tupleObj[0]
 filteredWords = []
-
+filteredNoDuplicates = set()
 print(allTweetText)
 
 # print average polarities and subjectivities
@@ -93,18 +121,19 @@ print(f'Average polarity: {averages[0]}')
 print(f'Average subjectivity: {averages[1]}')
 print('')
 
-graphScatterplot(allSentiments)
+graphScatterplot(allSentiments, 1)
 # graph polarity histogram
 polarities = getPolarityArray(allSentiments)
+
 graphHistogram(polarities, -1, 1, 'Polarity Values', 'Number of tweets', 'Histogram of Polarity', 2)
 
 # graph subjectivity histogram
 subjectivities = getSubjectivityArray(allSentiments)
+
 graphHistogram(subjectivities, 0, 1, 'Subjectivity Values', 'Number of tweets', 'Histogram of Subjectivity', 3)
 
 tweetBlob = TextBlob(allTweetText)
 for word in tweetBlob.word_counts:
-    print(word)
     if len(word) < 3:
         continue
     elif not word.isalpha():
@@ -113,6 +142,15 @@ for word in tweetBlob.word_counts:
         continue
     else:
         filteredWords.append(word)
+        filteredNoDuplicates.add(word)
 
 input = ' '.join(filteredWords)
-generateWordCloud(input)
+generateWordCloud(input, 'Tweets', 4)
+
+neutralWords = getNeutralWords(filteredNoDuplicates)
+positiveWords = getPositveWords(filteredNoDuplicates)
+negativeWords = getNegativeWords(filteredNoDuplicates)
+
+generateWordCloud(' '.join(neutralWords), 'Neutral Words', 5)
+generateWordCloud(' '.join(positiveWords), 'Positive Words', 6)
+generateWordCloud(' '.join(negativeWords), 'Negative Words', 7)
