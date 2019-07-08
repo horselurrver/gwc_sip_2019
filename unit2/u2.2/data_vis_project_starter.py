@@ -8,6 +8,7 @@ import json
 from textblob import TextBlob
 import matplotlib.pyplot as plt
 import numpy as np
+from wordcloud import WordCloud
 
 def getAveragePolaritySubjectivity(sentiments):
     totalPolarity = 0
@@ -52,21 +53,39 @@ def graphScatterplot(sentiments):
 
     plt.scatter(x, y, s=area, c=colors, alpha=0.5)
     plt.show()
-# array containing all Sentiment objects
-allSentiments = []
 
-#Get the JSON data
-tweetFile = open("../u2.1/tweets_small.json", "r")
-tweetData = json.load(tweetFile)
-for tweet in tweetData:
-    '''
-    The polarity score is a float within the range [-1.0, 1.0].
-    The subjectivity is a float within the range [0.0, 1.0] where 0.0 is very objective and 1.0 is very subjective.
-    '''
-    text = tweet['text']
-    blob = TextBlob(text)
-    allSentiments.append(blob.sentiment)
-tweetFile.close()
+def generateWordCloud(text):
+    # Create and generate a word cloud image:
+    # lower max_font_size, change the maximum number of word and lighten the background:
+    wordcloud = WordCloud(max_font_size=50, max_words=100, background_color="white").generate(text)
+    plt.figure(4)
+    plt.imshow(wordcloud, interpolation="bilinear")
+    plt.axis("off")
+    plt.show()
+
+def loadJSON():
+    allTweetText = ''
+    allSentiments = []
+    tweetFile = open("../u2.1/tweets_small.json", "r")
+    tweetData = json.load(tweetFile)
+    for tweet in tweetData:
+        '''
+        The polarity score is a float within the range [-1.0, 1.0].
+        The subjectivity is a float within the range [0.0, 1.0] where 0.0 is very objective and 1.0 is very subjective.
+        '''
+        text = tweet['text']
+        allTweetText += text + ' '
+        blob = TextBlob(text)
+        allSentiments.append(blob.sentiment)
+    tweetFile.close()
+    return (allTweetText, allSentiments)
+# array containing all Sentiment objects
+tupleObj = loadJSON()
+allSentiments = tupleObj[1]
+allTweetText = tupleObj[0]
+filteredWords = []
+
+print(allTweetText)
 
 # print average polarities and subjectivities
 averages = getAveragePolaritySubjectivity(allSentiments)
@@ -82,3 +101,18 @@ graphHistogram(polarities, -1, 1, 'Polarity Values', 'Number of tweets', 'Histog
 # graph subjectivity histogram
 subjectivities = getSubjectivityArray(allSentiments)
 graphHistogram(subjectivities, 0, 1, 'Subjectivity Values', 'Number of tweets', 'Histogram of Subjectivity', 3)
+
+tweetBlob = TextBlob(allTweetText)
+for word in tweetBlob.word_counts:
+    print(word)
+    if len(word) < 3:
+        continue
+    elif not word.isalpha():
+        continue
+    elif word in ['and', 'about', 'the', 'http']:
+        continue
+    else:
+        filteredWords.append(word)
+
+input = ' '.join(filteredWords)
+generateWordCloud(input)
