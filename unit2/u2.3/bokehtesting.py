@@ -1,3 +1,6 @@
+"""
+Name this something other than bokeh.py to avoid module error
+"""
 from bokeh.plotting import figure, output_file, show
 output_file("test.html")
 p = figure()
