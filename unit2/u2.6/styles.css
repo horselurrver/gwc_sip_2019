@@ -1,0 +1,17 @@
+.flex-center {
+  display: flex;
+  justify-content: center;
+}
+
+.arrow {
+  margin-top: 3em;
+  font-size: 6em;
+}
+
+.center {
+  margin: 1em;
+}
+
+.black {
+  color: black;
+}
