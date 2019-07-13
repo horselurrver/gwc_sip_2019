@@ -1,4 +1,4 @@
-var allImages = ['images/landscape1.jpg', 'images/landscape2.jpg', 'images/landscape3.jpg']
+var allImages = ['images/landscape1.jpg', 'images/landscape2.jpg', 'images/landscape3.jpg'];
 
 // wrap index
 function mod_floor(n) {
@@ -21,6 +21,7 @@ function moveCarousel(direction) {
   $('#slideshow').fadeIn();
   $('#' + index).attr('class', 'fas fa-circle center');
 }
+
 function nextRight() {
   // alert('RIGHT');
   moveCarousel('right');
